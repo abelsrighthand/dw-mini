@@ -9,33 +9,6 @@ local RunService = game:GetService("RunService")
 local lighting = game:GetService("Lighting")
 print("player name is "..plr.Name)
 
--- Esp Blink Config
-local activeHighlights = {}
-local blinkConnection = nil
-local blinkStartTime = os.clock()
-local BLINK_FREQ_HZ = 1
-local BLINK_AMPLITUDE = 0.1
-
-local function startBlinkLoop()
-	if blinkConnection then
-		return
-	end
-	blinkConnection = RunService.RenderStepped:Connect(function()
-		local t = os.clock() - blinkStartTime
-		local factor = (math.sin(2 * math.pi * BLINK_FREQ_HZ * t) + 1) * 0.5
-		for highlight, base in pairs(activeHighlights) do
-			if highlight and highlight.Parent then
-				local fillBase = base.FillTransparency or 0
-				local outlineBase = base.OutlineTransparency or 0
-				highlight.FillTransparency = math.clamp(fillBase+(1-fillBase)*factor*0.8, 0, 1)
-				highlight.OutlineTransparency = math.clamp(outlineBase+(1-outlineBase)*factor*0.8, 0, 1)
-			else
-				activeHighlights[highlight] = nil
-			end
-		end
-	end)
-end
-
 -- Actual ESP
 local itemblacklist = {
 	"Chocolate",
@@ -80,7 +53,7 @@ local function onAdded(item)
 			return nil
 		end
 		highlighteffect.OutlineTransparency = 1
-		highlighteffect.FillTransparency = 0.85
+		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = Color3.fromRGB(255, 200, 0)
 		highlighteffect.FillColor = Color3.fromRGB(255, 200, 0)
 		local function onGenComplete()
@@ -96,19 +69,19 @@ local function onAdded(item)
 			color = Color3.fromRGB(0, 220, 100)
 		end
 		highlighteffect.OutlineTransparency = 1
-		highlighteffect.FillTransparency = 0.85
+		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
 
 	elseif item.Parent.Name == "InGamePlayers" then
 		highlighteffect.OutlineTransparency = 1
-		highlighteffect.FillTransparency = 0.85
+		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = Color3.fromRGB(0, 128, 0)
 		highlighteffect.FillColor = Color3.fromRGB(0, 128, 0)
 
 	else
 		highlighteffect.OutlineTransparency = 1
-		highlighteffect.FillTransparency = 0.85
+		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	end
@@ -134,7 +107,7 @@ local function highlightmonstereffect(parent)
 	local highlighteffect = Instance.new("Highlight", parent)
 	highlighteffect.Name = "AbstractHighlight"
 	highlighteffect.OutlineTransparency = 1
-	highlighteffect.FillTransparency = 0.85
+	highlighteffect.FillTransparency = 0.5
 	highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 	highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	activeHighlights[highlighteffect] = {
