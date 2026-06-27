@@ -145,34 +145,6 @@ local function highlightblotzone(entity)
 	end
 end
 
--- Room Highlight
-local roomdir = workspace.CurrentRoom
-local roomentity = roomdir:FindFirstChildOfClass("Model")
-
-local function onRoomGen(roominstance)
-	print("the room Gen is "..roominstance.Name)
-	roomentity = roominstance
-	for idx, instance in roominstance:GetChildren() do
-		highlightblotzone(instance)
-	end
-	roominstance.ChildAdded:Connect(highlightblotzone)
-	Abstract_HighLight(roominstance, "Monsters")
-	Abstract_HighLight(roominstance, "Generators")
-	Abstract_HighLight(roominstance, "Items")
-	Abstract_HighLight(roominstance, "FreeArea")
-end
-
-local function onRoomDestroy(roominstance)
-	roomentity = nil
-	print("the room destroyed is "..roominstance.Name)
-end
-
-if roomentity ~= nil then
-	onRoomGen(roomentity)
-end
-roomdir.ChildAdded:Connect(onRoomGen)
-roomdir.ChildRemoved:Connect(onRoomDestroy)
-
 -- Player ESP Handler
 local playerlist = workspace.InGamePlayers:GetChildren()
 for playeridx in playerlist do
