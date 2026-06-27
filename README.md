@@ -2,15 +2,15 @@ A light script for Dandy's World with no UI for those who want to play with othe
 
 Features:
 - ESP
-  > Twisteds
-  > Players
-  > Machines
-  > Select items
+  + Twisteds
+  + Players
+  + Machines
+  + Select items
 - Auto Vee Popups
 - Infinite Stamina
 - Auto/Anti-Fail Skillcheck
-  > Support for Barnaby machines
-  > NOTE: The machine will appear to fail but will not alert Twisteds and will reward with extra completion like a normal skillcheck.
+  + Support for Barnaby machines
+  + NOTE: The machine will appear to fail but will not alert Twisteds and will reward with extra completion like a normal skillcheck.
 - Fullbright
 - Anti-Lag
 - Auto-Struggle (Squirm)
