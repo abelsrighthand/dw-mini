@@ -539,6 +539,9 @@ local function getsiblings(part)
     end
 end
 
+--barnaby machine (thx qwel)
+loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
+
 --open all the light
 local function setLightRange(root, range)
     if not root then return end
