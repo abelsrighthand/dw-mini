@@ -9,7 +9,7 @@ local RunService = game:GetService("RunService")
 local lighting=game:GetService("Lighting")
 print("player name is "..plr.Name)
 
--- Highlight blink (1Hz sine wave)
+-- Esp Blink
 local activeHighlights = {}
 local blinkConnection = nil
 local blinkStartTime = os.clock()
@@ -36,30 +36,31 @@ local function startBlinkLoop()
 	end)
 end
 
---ESP
+-- Actual ESP
 local itemblacklist = {
-	--"AirHorn",
-	"BonBon",
 	"Chocolate",
-	--"ExtractionSpeedCandy",
+	"ExtractionSpeedCandy",
 	"Gumball",
 	"Jawbreaker",
-	--"ProteinBar",
+	"ProteinBar",
 	"SkillCheckCandy",
-	--"SpeedCandy",
-	--"StaminaCandy",
+	"SpeedCandy",
+	"StaminaCandy",
 	"StealthCandy",
 	"Stopwatch",
+	"Tape",
+	"ResearchCapsule",
+	"Pop",
+	"EjectButton",
+	"SmokeBomb",
 }
 
 local function onAdded(item)
-	--print(item.Name)
-	--highlight sprout tentacles
-	--workspace.CurrentRoom.Warehouse1.FreeArea.SproutTendril
+	-- Sprout Tendril Highlight
 	if item.Parent.Name=="FreeArea" and item.Name~="SproutTendril" then
 	    return
 	end
-	local isHighlight = item:FindFirstChild("FjoneHighlight")
+	local isHighlight = item:FindFirstChild("AbstractHighlight")
 	if isHighlight ~= nil then
 	    return
 	end
@@ -70,7 +71,7 @@ local function onAdded(item)
 		end
 	end
 	local highlighteffect = Instance.new("Highlight", item)
-	highlighteffect.Name = "FjoneHighlight"
+	highlighteffect.Name = "AbstractHighlight"
 	if item.Name == "Generator" then
 		if item:FindFirstChild("Stats") and item.Stats:FindFirstChild("Completed").Value == true then
 		    highlighteffect:Destroy()
@@ -111,7 +112,7 @@ local function onAdded(item)
 	startBlinkLoop()
 end
 
-local function Fjone_HighLight(room, foldername)
+local function Abstract_HighLight(room, foldername)
 	print("Current Floor Name is "..room.Name)
 	local dir = room:WaitForChild(foldername)
 	local list = dir:GetChildren()
@@ -123,7 +124,7 @@ end
 
 local function highlightmonstereffect(parent)
     local highlighteffect = Instance.new("Highlight", parent)
-    highlighteffect.Name = "FjoneHighlight"
+    highlighteffect.Name = "AbstractHighlight"
     highlighteffect.OutlineColor = Color3.fromRGB(178,34,34)
     highlighteffect.FillColor = Color3.fromRGB(178,34,34)
     highlighteffect.OutlineTransparency=0.3
@@ -134,12 +135,11 @@ local function highlightmonstereffect(parent)
     }
 end
 
---highlight blot hands
---workspace.CurrentRoom.AstroMap.BlotHandZone_2.BlotHand_L
+-- Blot Hands Highlight
 local function highlightblothand(hand)
     print("hand is "..hand.Name)
     local arm = hand:WaitForChild("Arm")
-    local isHighlight = arm:FindFirstChild("FjoneHighlight")
+    local isHighlight = arm:FindFirstChild("AbstractHighlight")
 	if isHighlight ~= nil then
 	    return
 	end
@@ -158,7 +158,7 @@ local function highlightblotzone(entity)
         end
     end
 end
---Highlight room entity
+-- Room Highlight
 local roomdir=workspace.CurrentRoom
 local roomentity=roomdir:FindFirstChildOfClass("Model")
 
@@ -169,11 +169,10 @@ local function onRoomGen(roominstance)
         highlightblotzone(instance)
     end
     roominstance.ChildAdded:Connect(highlightblotzone)
-    roominstance.ChildAdded:Connect(highlightBassieFlowerTrap)
-	Fjone_HighLight(roominstance,"Monsters")
-	Fjone_HighLight(roominstance,"Generators")
-	Fjone_HighLight(roominstance,"Items")
-	Fjone_HighLight(roominstance,"FreeArea")
+	Abstract_HighLight(roominstance,"Monsters")
+	Abstract_HighLight(roominstance,"Generators")
+	Abstract_HighLight(roominstance,"Items")
+	Abstract_HighLight(roominstance,"FreeArea")
 end
 
 local function onRoomDestroy(roominstance)
@@ -187,9 +186,7 @@ end
 roomdir.ChildAdded:Connect(onRoomGen)
 roomdir.ChildRemoved:Connect(onRoomDestroy)
 
---Highlight player
---workspace.InGamePlayers.Ashley_186i3.Stats.Health
---workspace.InGamePlayers.Ashley_186i3.Humanoid
+--Player Highlights
 local playerlist = workspace.InGamePlayers:GetChildren()
 for playeridx in playerlist do
 	if playerlist[playeridx].Name == plr.Name then
@@ -341,7 +338,7 @@ for playeridx in playerlist do
 	end
 end
 
---Vee Ads free
+-- No More Vee Popups
 function hasProperty(object, propertyName)
     local success, _ = pcall(function() 
         object[propertyName] = object[propertyName]
@@ -364,7 +361,7 @@ if screengui ~= nil then
     end
 end
 
---infinite stamina
+-- Inf Stam
 local sprintevent = replicated.Events:WaitForChild("SprintEvent")
 local updateLoop = nil
 local updateEnabled = false
