@@ -1,4 +1,3 @@
-
 local plrsrv = game:GetService("Players")
 local replicated = game:GetService("ReplicatedStorage")
 local userinputservice = game:GetService("UserInputService")
@@ -28,8 +27,6 @@ local itemblacklist = {
 	"SmokeBomb",
 }
 
-print("Blacklist loaded")
-
 	-- Sprout Tendril ESP
 local function onAdded(item)
 	if item.Parent.Name=="FreeArea" and item.Name~="SproutTendril" then
@@ -40,8 +37,6 @@ local function onAdded(item)
 		return
 	end
 
-print("Sprout Tendril ESP loaded")
-	
 	-- Item Blacklist Handler
 	for blackidx in itemblacklist do
 		if item.Name == itemblacklist[blackidx] then
@@ -52,8 +47,6 @@ print("Sprout Tendril ESP loaded")
 	local highlighteffect = Instance.new("Highlight", item)
 	highlighteffect.Name = "AbstractHighlight"
 
-print("item blacklist handler loaded")
-	
 	-- Generator ESP
 	if item.Name == "Generator" then
 		if item:FindFirstChild("Stats") and item.Stats:FindFirstChild("Completed").Value == true then
@@ -70,9 +63,7 @@ print("item blacklist handler loaded")
 			end
 		end
 		item.Stats:FindFirstChild("Completed"):GetPropertyChangedSignal("Value"):Connect(onGenComplete)
-		
-print("Generator ESP loaded")
-		
+
 		-- Item ESP
 	elseif item.Parent.Name == "Items" then
 		local color = Color3.fromRGB(30, 144, 255)
@@ -84,8 +75,6 @@ print("Generator ESP loaded")
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
 
-print("Item ESP loaded")
-		
 		--Player ESP
 	elseif item.Parent.Name == "InGamePlayers" then
 		highlighteffect.OutlineTransparency = 1
@@ -99,9 +88,8 @@ print("Item ESP loaded")
 		highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	end
+end
 
-print("Player ESP loaded")
-	
 	-- Room ESP Handler
 local function Abstract_HighLight(room, foldername)
 	print("Current Floor Name is "..room.Name)
@@ -120,14 +108,8 @@ local function highlightmonstereffect(parent)
 	highlighteffect.FillTransparency = 0.5
 	highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 	highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
-	activeHighlights[highlighteffect] = {
-		FillTransparency = highlighteffect.FillTransparency,
-		OutlineTransparency = highlighteffect.OutlineTransparency,
-	}
 end
 
-print("Room ESP Handler loaded")
-	
 -- Blot Hands ESP
 local function highlightblothand(hand)
 	print("hand is "..hand.Name)
@@ -152,8 +134,34 @@ local function highlightblotzone(entity)
 	end
 end
 
-print("Blot hands ESP loaded)
-	
+-- Room Highlight
+local roomdir = workspace.CurrentRoom
+local roomentity = roomdir:FindFirstChildOfClass("Model")
+
+local function onRoomGen(roominstance)
+	print("the room Gen is "..roominstance.Name)
+	roomentity = roominstance
+	for idx, instance in roominstance:GetChildren() do
+		highlightblotzone(instance)
+	end
+	roominstance.ChildAdded:Connect(highlightblotzone)
+	Abstract_HighLight(roominstance, "Monsters")
+	Abstract_HighLight(roominstance, "Generators")
+	Abstract_HighLight(roominstance, "Items")
+	Abstract_HighLight(roominstance, "FreeArea")
+end
+
+local function onRoomDestroy(roominstance)
+	roomentity = nil
+	print("the room destroyed is "..roominstance.Name)
+end
+
+if roomentity ~= nil then
+	onRoomGen(roomentity)
+end
+roomdir.ChildAdded:Connect(onRoomGen)
+roomdir.ChildRemoved:Connect(onRoomDestroy)
+
 -- Player ESP Handler
 local playerlist = workspace.InGamePlayers:GetChildren()
 for playeridx in playerlist do
@@ -164,8 +172,6 @@ for playeridx in playerlist do
 	print("Highlight game player is "..playerentity.Name)
 	onAdded(playerentity)
 end
-
-print("Player ESP Handler loaded")
 
 -- No More Vee Popups
 function hasProperty(object, propertyName)
@@ -190,8 +196,6 @@ if screengui ~= nil then
 	end
 end
 
-print("No More Vee Popups loaded")
-		
 -- Inf Stam
 local sprintevent = replicated.Events:WaitForChild("SprintEvent")
 local updateLoop = nil
@@ -291,8 +295,6 @@ userinputservice.InputEnded:Connect(function(inputobj, processevent)
 	end
 end)
 
-print("Inf Stamina Loaded")
-		
 -- Anti-Fail Skillcheck
 	-- Old AutoSC modules for later reference
 		--local TreadmillTapSkillCheck_upvr_2 = require(game.ReplicatedStorage.Modules.TreadmillTapSkillCheck)
@@ -348,13 +350,9 @@ local function getsiblings(part)
 	end
 end
 
-print("Autoscillcheck loaded")
-		
 -- Barnaby Machine Autoskillcheck (thx qwel)
 loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
 
-print("Barnaby support loaded")
-		
 -- Fullbright
 local function SetFullbright(enabled)
 	if enabled then
@@ -390,8 +388,6 @@ lighting:GetPropertyChangedSignal("Ambient"):Connect(function()
 	end
 end)
 
-print("Fullbright loaded")
-		
 -- Auto Struggle (totally didn't rip from Riddance what I would never do that)
 local TwistedSquirmGrabremote = replicated:WaitForChild("Events"):WaitForChild("TwistedSquirmGrab")
 
@@ -421,8 +417,6 @@ task.spawn(function()
 	end
 end)
 
-print("Autostruggle loaded")
-		
 -- Anti-Lag
 local function applyAntiLag(part)
     if part:IsA("BasePart") then
@@ -437,5 +431,3 @@ for _, part in ipairs(workspace:GetDescendants()) do
 end
 
 workspace.DescendantAdded:Connect(applyAntiLag)
-
-		print("Anti-Lag loaded")
