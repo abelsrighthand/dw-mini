@@ -1,3 +1,4 @@
+
 local plrsrv = game:GetService("Players")
 local replicated = game:GetService("ReplicatedStorage")
 local userinputservice = game:GetService("UserInputService")
@@ -74,7 +75,27 @@ local function onAdded(item)
 		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
+
+		--Player ESP
+	elseif item.Parent.Name == "InGamePlayers" then
+		highlighteffect.OutlineTransparency = 1
+		highlighteffect.FillTransparency = 0.5
+		highlighteffect.OutlineColor = Color3.fromRGB(0, 128, 0)
+		highlighteffect.FillColor = Color3.fromRGB(0, 128, 0)
+
+	else
+		highlighteffect.OutlineTransparency = 1
+		highlighteffect.FillTransparency = 0.5
+		highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
+		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	end
+
+	activeHighlights[highlighteffect] = {
+		FillTransparency = highlighteffect.FillTransparency,
+		OutlineTransparency = highlighteffect.OutlineTransparency,
+	}
+	startBlinkLoop()
+end
 
 	-- Room ESP Handler
 local function Abstract_HighLight(room, foldername)
@@ -151,6 +172,17 @@ if roomentity ~= nil then
 end
 roomdir.ChildAdded:Connect(onRoomGen)
 roomdir.ChildRemoved:Connect(onRoomDestroy)
+
+-- Player ESP Handler
+local playerlist = workspace.InGamePlayers:GetChildren()
+for playeridx in playerlist do
+	if playerlist[playeridx].Name == plr.Name then
+		continue
+	end
+	local playerentity = playerlist[playeridx]
+	print("Highlight game player is "..playerentity.Name)
+	onAdded(playerentity)
+end
 
 -- No More Vee Popups
 function hasProperty(object, propertyName)
@@ -330,7 +362,7 @@ local function getsiblings(part)
 end
 
 -- Barnaby Machine Autoskillcheck (thx qwel)
---loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
+loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
 
 -- Fullbright
 local function SetFullbright(enabled)
