@@ -1,9 +1,18 @@
-Mini script for DW (Mostly for my personal use) that has no UI and just adds the following:
+A light script for Dandy's World with no UI for those who want to play with others with no risk of getting reported. 
 
-1. ESP
-2. Inf Stam
-3. Auto Skillcheck
+Features:
+- ESP
+  > Twisteds
+  > Players
+  > Machines
+  > Select items
+- Auto Vee Popups
+- Infinite Stamina
+- Auto/Anti-Fail Skillcheck
+  > Support for Barnaby machines
+  > NOTE: The machine will appear to fail but will not alert Twisteds and will reward with extra completion like a normal skillcheck.
+- Fullbright
+- Anti-Lag
+- Auto-Struggle (Squirm)
 
-Feature checklist I intend to add:
-
-1. Fullbright
+This script is mostly for my personal use. I will fix bugs when I find them, although if you see this script posted by me feel free to ask me about any bugs you find. Thank you!
