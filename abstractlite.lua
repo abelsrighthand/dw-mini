@@ -90,13 +90,6 @@ local function onAdded(item)
 		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	end
 
-	activeHighlights[highlighteffect] = {
-		FillTransparency = highlighteffect.FillTransparency,
-		OutlineTransparency = highlighteffect.OutlineTransparency,
-	}
-	startBlinkLoop()
-end
-
 	-- Room ESP Handler
 local function Abstract_HighLight(room, foldername)
 	print("Current Floor Name is "..room.Name)
