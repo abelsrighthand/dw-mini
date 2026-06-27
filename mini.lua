@@ -481,6 +481,64 @@ userinputservice.InputEnded:Connect(function(inputobj, processevent)
     end
 end)
 
+--auto skillcheck（hook remote function method）
+--local TreadmillTapSkillCheck_upvr_2 = require(game.ReplicatedStorage.Modules.TreadmillTapSkillCheck)
+--local CircleSkillCheckHandler_upvr = require(ReplicatedStorage_upvr.Modules.CircleSkillCheckHandler)
+--local RF = game:GetService("ReplicatedStorage").Events.SkillcheckUpdate
+--local cb = getcallbackvalue(RF, "OnClientInvoke");
+local skillcheckupdate = replicated.Events:WaitForChild("SkillcheckUpdate")
+local oriskillcheckupdate = nil
+print("Fjone: try Hooking SkillcheckUpdate...")
+local retry=5
+while oriskillcheckupdate == nil and retry>0 do
+    if getcallbackvalue ~= nil then
+        oriskillcheckupdate = getcallbackvalue(skillcheckupdate, "OnClientInvoke")
+    end
+    task.wait(1)
+    retry=retry-1
+end
+
+skillcheckupdate.OnClientInvoke = function(...)
+    local args = { ... }
+    local result
+
+    print("[SkillcheckUpdate] args:", unpack(args))
+
+    if oriskillcheckupdate ~= nil then
+        result = oriskillcheckupdate(...)
+        print("[SkillcheckUpdate] return:", result)
+    else
+        print("[SkillcheckUpdate] oriskillcheckupdate is still nil")
+    end
+
+	--for normal and circle machine, it should be supercomplete
+	--for treadmill tap, it should be true
+	local arg2 = select(2, ...)
+	print("arg2 typeof is "..typeof(arg2))
+	if arg2 and typeof(arg2) == "table" then
+	    if arg2.type == "treadmill" then
+		    print("it is treadmill, return true")
+		    return true
+		elseif arg2.type == "circle" then
+		    print("it is circle machine, return supercomplete")
+		    return "supercomplete"
+		else
+		    print("arg2.type is "..arg2.type)
+		    return true
+		end
+	else
+		print("it is normal machine, return supercomplete")
+		return "supercomplete"
+	end
+end
+print("Fjone: Hooking SkillcheckUpdate Success...")
+
+local function getsiblings(part)
+    if part.Parent then
+        return part.Parent:GetChildren()
+    end
+end
+
 --open all the light
 local function setLightRange(root, range)
     if not root then return end
