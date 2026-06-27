@@ -79,7 +79,7 @@ local function onAdded(item)
 			highlighteffect:Destroy()
 			return nil
 		end
-		highlighteffect.OutlineTransparency = 0.2
+		highlighteffect.OutlineTransparency = 1
 		highlighteffect.FillTransparency = 0.85
 		highlighteffect.OutlineColor = Color3.fromRGB(255, 200, 0)
 		highlighteffect.FillColor = Color3.fromRGB(255, 200, 0)
@@ -95,19 +95,19 @@ local function onAdded(item)
 		if item.Name == "Bandage" or item.Name == "HealthKit" then
 			color = Color3.fromRGB(0, 220, 100)
 		end
-		highlighteffect.OutlineTransparency = 0.2
+		highlighteffect.OutlineTransparency = 1
 		highlighteffect.FillTransparency = 0.85
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
 
 	elseif item.Parent.Name == "InGamePlayers" then
-		highlighteffect.OutlineTransparency = 0.2
+		highlighteffect.OutlineTransparency = 1
 		highlighteffect.FillTransparency = 0.85
 		highlighteffect.OutlineColor = Color3.fromRGB(0, 128, 0)
 		highlighteffect.FillColor = Color3.fromRGB(0, 128, 0)
 
 	else
-		highlighteffect.OutlineTransparency = 0.2
+		highlighteffect.OutlineTransparency = 1
 		highlighteffect.FillTransparency = 0.85
 		highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
@@ -133,7 +133,7 @@ end
 local function highlightmonstereffect(parent)
 	local highlighteffect = Instance.new("Highlight", parent)
 	highlighteffect.Name = "AbstractHighlight"
-	highlighteffect.OutlineTransparency = 0.2
+	highlighteffect.OutlineTransparency = 1
 	highlighteffect.FillTransparency = 0.85
 	highlighteffect.OutlineColor = Color3.fromRGB(178, 34, 34)
 	highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
@@ -205,6 +205,7 @@ for playeridx in playerlist do
 	print("Highlight game player is "..playerentity.Name)
 	onAdded(playerentity)
 end
+
 -- No More Vee Popups
 function hasProperty(object, propertyName)
 	local success, _ = pcall(function()
