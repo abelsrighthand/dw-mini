@@ -29,6 +29,9 @@ local itemblacklist = {
 
 	-- Sprout Tendril ESP
 local function onAdded(item)
+	if not item or not item.Parent then
+    return
+end
 	if item.Parent.Name=="FreeArea" and item.Name~="SproutTendril" then
 		return
 	end
@@ -89,17 +92,15 @@ local function onAdded(item)
 		highlighteffect.FillColor = Color3.fromRGB(178, 34, 34)
 	end
 
-	activeHighlights[highlighteffect] = {
-		FillTransparency = highlighteffect.FillTransparency,
-		OutlineTransparency = highlighteffect.OutlineTransparency,
-	}
-	startBlinkLoop()
-end
-
 	-- Room ESP Handler
 local function Abstract_HighLight(room, foldername)
 	print("Current Floor Name is "..room.Name)
-	local dir = room:WaitForChild(foldername)
+	local dir = room:WaitForChild(foldername, 5)
+
+	if not dir then
+    warn("ESP missing folder:", foldername)
+    return
+end
 	local list = dir:GetChildren()
 	for itemidx in list do
 		onAdded(list[itemidx])
@@ -144,7 +145,7 @@ local function highlightblotzone(entity)
 	end
 end
 
--- Room Highlight
+-- Room ESP Handler
 local roomdir = workspace.CurrentRoom
 local roomentity = roomdir:FindFirstChildOfClass("Model")
 
@@ -173,38 +174,40 @@ roomdir.ChildAdded:Connect(onRoomGen)
 roomdir.ChildRemoved:Connect(onRoomDestroy)
 
 -- Player ESP Handler
-local playerlist = workspace.InGamePlayers:GetChildren()
-for playeridx in playerlist do
-	if playerlist[playeridx].Name == plr.Name then
-		continue
-	end
-	local playerentity = playerlist[playeridx]
-	print("Highlight game player is "..playerentity.Name)
-	onAdded(playerentity)
+local function HighlightPlayer(playerentity)
+    local success, err = pcall(function()
+
+        -- Waiting for you shitty device ppl to load
+        local humanoid = playerentity:WaitForChild("Humanoid", 5)
+        local stats = playerentity:WaitForChild("Stats", 5)
+        local inventory = playerentity:WaitForChild("Inventory", 5)
+
+        if not humanoid or not stats or not inventory then
+            warn("ESP skipping player (not fully loaded):", playerentity.Name)
+            return
+        end
+
+        print("Highlight game player is "..playerentity.Name)
+        onAdded(playerentity)
+
+    end)
+
+    if not success then
+        warn("Esp failed to highlight "..playerentity.Name..":", err)
+    end
 end
 
--- No More Vee Popups
-function hasProperty(object, propertyName)
-	local success, _ = pcall(function()
-		object[propertyName] = object[propertyName]
-	end)
-	return success
+for _, playerentity in ipairs(workspace.InGamePlayers:GetChildren()) do
+    if playerentity.Name ~= plr.Name then
+        HighlightPlayer(playerentity)
+    end
 end
 
-if screengui ~= nil then
-	print("screengui founded")
-	local popup = screengui:FindFirstChild("PopUp")
-	if popup ~= nil then
-		print(popup.Name.." Founded")
-		local list = popup:GetChildren()
-		for itemidx in list do
-			if hasProperty(list[itemidx], "Visible") then
-				print("hide "..list[itemidx].Name)
-				list[itemidx].Visible = false
-			end
-		end
-	end
-end
+workspace.InGamePlayers.ChildAdded:Connect(function(playerentity)
+    if playerentity.Name ~= plr.Name then
+        HighlightPlayer(playerentity)
+    end
+end)
 
 -- Inf Stam
 local sprintevent = replicated.Events:WaitForChild("SprintEvent")
