@@ -74,6 +74,7 @@ local function onAdded(item)
 		highlighteffect.FillTransparency = 0.5
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
+	end
 
 	-- Room ESP Handler
 local function Abstract_HighLight(room, foldername)
@@ -329,7 +330,7 @@ local function getsiblings(part)
 end
 
 -- Barnaby Machine Autoskillcheck (thx qwel)
-loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
+--loadstring(game:HttpGet("https://raw.githubusercontent.com/christmas-cookie/extensions/refs/heads/main/arcademachine", true))()
 
 -- Fullbright
 local function SetFullbright(enabled)
