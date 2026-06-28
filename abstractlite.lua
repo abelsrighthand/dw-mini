@@ -9,7 +9,8 @@ local RunService = game:GetService("RunService")
 local lighting = game:GetService("Lighting")
 print("player name is "..plr.Name)
 
--- Actual ESP
+-- ESP
+	-- ESP Item Blacklist
 local itemblacklist = {
 	"Chocolate",
 	"ExtractionSpeedCandy",
@@ -75,7 +76,7 @@ local function onAdded(item)
 		highlighteffect.OutlineColor = color
 		highlighteffect.FillColor = color
 
-		--Player ESP
+		-- Player ESP
 	elseif item.Parent.Name == "InGamePlayers" then
 		highlighteffect.OutlineTransparency = 1
 		highlighteffect.FillTransparency = 0.5
@@ -134,7 +135,7 @@ local function highlightblotzone(entity)
 	end
 end
 
--- Room Highlight
+-- Room ESP Handler 2.0
 local roomdir = workspace.CurrentRoom
 local roomentity = roomdir:FindFirstChildOfClass("Model")
 
@@ -295,54 +296,12 @@ userinputservice.InputEnded:Connect(function(inputobj, processevent)
 	end
 end)
 
--- Anti-Fail Skillcheck
-	-- Old AutoSC modules for later reference
-		--local TreadmillTapSkillCheck_upvr_2 = require(game.ReplicatedStorage.Modules.TreadmillTapSkillCheck)
-		--local CircleSkillCheckHandler_upvr = require(ReplicatedStorage_upvr.Modules.CircleSkillCheckHandler)
-		--local RF = game:GetService("ReplicatedStorage").Events.SkillcheckUpdate
-		--local cb = getcallbackvalue(RF, "OnClientInvoke");
-
+-- Auto SkillCheck
 local skillcheckupdate = replicated.Events:WaitForChild("SkillcheckUpdate")
-local oriskillcheckupdate = nil
-print("Abstract: try Hooking SkillcheckUpdate...")
-local retry = 5
-while oriskillcheckupdate == nil and retry > 0 do
-	if getcallbackvalue ~= nil then
-		oriskillcheckupdate = getcallbackvalue(skillcheckupdate, "OnClientInvoke")
-	end
-	task.wait(1)
-	retry = retry - 1
-end
-
 skillcheckupdate.OnClientInvoke = function(...)
-	local args = { ... }
-	local result
-	print("[SkillcheckUpdate] args:", unpack(args))
-	if oriskillcheckupdate ~= nil then
-		result = oriskillcheckupdate(...)
-		print("[SkillcheckUpdate] return:", result)
-	else
-		print("[SkillcheckUpdate] oriskillcheckupdate is still nil")
-	end
-	local arg2 = select(2, ...)
-	print("arg2 typeof is "..typeof(arg2))
-	if arg2 and typeof(arg2) == "table" then
-		if arg2.type == "treadmill" then
-			print("it is treadmill, return true")
-			return true
-		elseif arg2.type == "circle" then
-			print("it is circle machine, return autoskillcheck")
-			return "autoskillcheck"
-		else
-			print("arg2.type is "..arg2.type)
-			return true
-		end
-	else
-		print("it is normal machine, return autoskillcheck")
-		return "autoskillcheck"
-	end
+    return true
 end
-print("Abstract: Hooking SkillcheckUpdate Success...")
+print("Abstract: Auto skillcheck active")
 
 local function getsiblings(part)
 	if part.Parent then
