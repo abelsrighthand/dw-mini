@@ -33,7 +33,6 @@ function enablelooprunspeed()
 	updateEnabled = true
 	localcharacter.Humanoid.WalkSpeed = plr:GetAttribute("KM_MAX_PLAYER_SPEED")
 	sprinting.Value = updateEnabled
-	print("enablelooprunspeed:done")
 end
 
 local walkspeed = 0
@@ -43,24 +42,20 @@ function disablelooprunspeed()
 		localcharacter.Humanoid.WalkSpeed = walkspeed
 	end
 	sprinting.Value = updateEnabled
-	print("disablelooprunspeed:done")
 end
 
 -- Kill sprint when client event yes
 for i, connection in pairs(getconnections(sprintevent.OnClientEvent)) do
-	print("disable sprintevent.OnClientEvent")
 	connection:Disable()
 end
 
 sprintevent.OnClientEvent:Connect(function(arg1)
-	print("sprintevent.OnClientEvent, server is false")
 	serversidesprint = false
 	walkspeed = localcharacter.Humanoid.WalkSpeed
 	enablelooprunspeed()
 end)
 
 for i, connection in pairs(getconnections(screengui.MobileRun.Activated)) do
-	print("disable screengui.MobileRun.Activated")
 	connection:Disable()
 end
 
@@ -90,7 +85,7 @@ userinputservice.InputBegan:Connect(function(inputobj, processevent)
 		enablelooprunspeed()
 		serversidesprint = true
 		isprocessed = true
-		print("in r1 input begin, send server true")
+
 	end
 end)
 
@@ -98,7 +93,6 @@ userinputservice.InputEnded:Connect(function(inputobj, processevent)
 	if processevent then return end
 	if inputobj.KeyCode == Enum.KeyCode.ButtonR1 then
 		disablelooprunspeed()
-		print("in r1 input end ,send false ")
 		sprintevent:FireServer(false)
 		serversidesprint = false
 		isprocessed = false
@@ -112,7 +106,6 @@ userinputservice.InputBegan:Connect(function(inputobj, processevent)
 		enablelooprunspeed()
 		serversidesprint = true
 		sprintevent:FireServer(true)
-		print("shift sprint begin")
 	end
 end)
 
@@ -122,6 +115,5 @@ userinputservice.InputEnded:Connect(function(inputobj, processevent)
 		disablelooprunspeed()
 		sprintevent:FireServer(false)
 		serversidesprint = false
-		print("shift sprint end")
 	end
 end)
